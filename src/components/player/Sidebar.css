@@ -1,4 +1,7 @@
 .sidebar {
+    display: flex;
+    flex-direction: column;
+    flex: 0.2;
     height: 100vh;
     color: #fff;
     min-width: 230px;
