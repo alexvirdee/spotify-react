@@ -1,11 +1,43 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Login from './components/login/Login';
+import Player from './components/player/Player';
+import { getTokenFromUrl } from './spotify/spotify';
+import SpotifyWebApi from "spotify-web-api-js";
+import { useDataLayerValue } from './DataLayer';
+
+const spotify = new SpotifyWebApi();
 
 function App() {
+  const [token, setToken] = useState(null);
+  const [{}, dispatch] = useDataLayerValue();
+
+  useEffect(() => {
+    const hash = getTokenFromUrl();
+    window.location.hash = "";
+
+    const _token = hash.access_token;
+
+    if (_token) {
+      setToken(_token)
+
+      spotify.setAccessToken(_token);
+
+      spotify.getMe().then(user => {
+        console.log(user);
+      })
+
+    }
+  }, [])
+
   return (
-    // BEM
     <div className="app">
-      <Login />
+      {
+        token ? (
+         <Player />
+        ) : (
+          <Login />
+        )
+      }
     </div>
   );
 }
